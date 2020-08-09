@@ -1,0 +1,16 @@
+
+    <!-- <app-header></app-header>
+    <div class="content-menu-wrap">
+        <app-menu></app-menu>
+        <app-content></app-content>
+    </div> -->
+
+ <app-header></app-header>
+ <mat-drawer-container class="example-container " autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" opened="true" position="{{matDrawerPOsition}}">
+        <app-menu></app-menu>
+    </mat-drawer>
+    <div class="example-sidenav-content">
+        <app-content></app-content> 
+    </div>
+  </mat-drawer-container>

@@ -1,1 +1,58 @@
-/* You can add global styles to this file, and also import other style files */
+*{
+    padding: 0;
+    margin: 0;
+}
+html, body { height: 100%; }
+body {
+     margin: 0; 
+     font-family: Roboto, "Helvetica Neue", sans-serif; 
+     background: #1d2636;
+     background-image: linear-gradient(to right,rgba(13,230,255,0.15) 0%,rgba(201,189,174,0) 25%);
+    }
+
+
+app-content, .mat-drawer-content{
+    background: #0f1724;
+    flex-grow: 1;
+}
+app-menu, .mat-drawer.mat-drawer-side{
+    min-width:15rem;
+    background: #1d2636;
+    box-shadow: 2px 0px 0px -5px rgba(0,0,0,.5), inset 0 5px 10px -5px rgba(0,0,0,.5);
+}
+mat-icon:hover, button{
+    cursor: pointer;
+}
+.titleColor{
+    color: #11ece5;
+}
+.createMenuForm .mat-form-field-underline {
+    background-color:#fff !important;
+}
+
+.submitAlert{
+    padding-top: 10px;
+}
+.submitError{
+    color: red;
+}
+
+.mat-progress-spinner{
+    position: absolute !important;
+    top: -25px;
+}
+.buttonAndSpinner{
+    position: relative;
+}
+.mat-progress-spinner circle{
+    stroke: rgba(255,255,255,0.5);
+}
+
+
+
+/*sidenav start*/
+.mat-drawer-container{
+    height: 100%;
+}
+
+/*sidenav end*/

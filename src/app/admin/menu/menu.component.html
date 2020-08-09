@@ -1,0 +1,87 @@
+<div class="menu-wrap">
+    <!--create first level of menu-->
+    <div class="createMainMenu">
+        <div *ngIf="clickedToCreateMenu" class="createMenuForm">
+            <label class="titleColor">{{createMenuTitle}}</label>
+            <form [formGroup]="createMenuForm"  (ngSubmit)="saveNewMenu(createMenuForm.value)" *ngIf="formView">
+                <mat-form-field class="example-form-field">
+                    <mat-label>{{titleInputAddMenu}}</mat-label>
+                    <input matInput type="text" #value formControlName='title'>
+                    <button mat-button *ngIf="value.value" matSuffix mat-icon-button aria-label="Clear" (click)="value.value = ''">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                  <div class="buttonAndSpinner">
+                    <button mat-flat-button type='submit' [disabled]="value.value == ''">{{createMenuButton}}</button>
+                    <mat-spinner *ngIf="spinner"></mat-spinner>
+                </div>
+            </form>
+            <div class="submitAlert" [class.submitError]="error">{{alert}}</div>
+        </div>
+        <div class="openCreateMenuForm" matTooltip="{{openFormButton != 'keyboard_arrow_up' ? addMenuTooltip : closeMenuTooltip}}" (click)="openCreateMenu()">
+            <mat-icon>{{openFormButton}}</mat-icon>
+        </div>
+    </div>
+    <!--add childs to menu-->
+    <div class="viewMenu">
+        <form [formGroup] = "addMenuForm">
+            <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                <!-- This is the tree node template for leaf nodes -->
+                <cdk-nested-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
+                  <!-- use a disabled button to provide padding for tree leaf -->
+                  <div>
+                    <button mat-icon-button disabled></button>
+                    <a [routerLink] = "[node.url]" class="nodeLink">{{node.name}}</a>
+                    <button mat-icon-button (click)="openAddMenuForm(node)">
+                      <mat-icon matTooltip="{{node.id != iconControl ? addMenuTooltip : closeMenuTooltip}}">{{node.id == iconControl ? 'remove' : 'add'}}</mat-icon>
+                    </button>
+                  </div>
+                  <div *ngIf="addMenuFormView == 'addMenuFormView' + node.id" class="addMenuForm">
+                    <mat-form-field class="example-form-field">
+                        <mat-label>{{titleInputAddMenu}}</mat-label>
+                        <input matInput type="text" placeholder="" #addMenuInput1   formControlName="title{{node.id}}">
+                        <button mat-button *ngIf="addMenuInput1.value"  matSuffix mat-icon-button aria-label="Clear" (click)="addMenuInput1.value = ''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>
+                      <div class="buttonAndSpinner">
+                        <button mat-flat-button  [disabled]="addMenuInput1.value == ''  " (click)="saveNewMenu(addMenuInput1.value, node)">{{createMenuButton}}</button>
+                        <mat-spinner *ngIf="spinnerChild"></mat-spinner>
+                      </div>
+                      <div class="submitAlert" [class.submitError]="error">{{childrenFormAlert}}</div>
+                  </div>
+                </cdk-nested-tree-node>
+                <!-- This is the tree node template for expandable nodes -->
+                <cdk-nested-tree-node *cdkTreeNodeDef="let node; when: hasChild" class="example-tree-node">
+                  <button mat-icon-button [attr.aria-label]="'toggle ' + node.name" cdkTreeNodeToggle>
+                    <mat-icon class="mat-icon-rtl-mirror">
+                      {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                  </button>
+                  <a [routerLink]="[node.url]" class="nodeLink">{{node.name}}</a>
+                  <button mat-icon-button (click)="openAddMenuForm(node)">
+                    <mat-icon matTooltip="{{node.id != iconControl ? addMenuTooltip : closeMenuTooltip}}">{{node.id == iconControl ? 'remove' : 'add'}}</mat-icon>
+                </button>
+                  <div *ngIf="addMenuFormView == 'addMenuFormView' + node.id" class="addMenuForm">
+                    <mat-form-field class="example-form-field">
+                        <mat-label>{{titleInputAddMenu}}</mat-label>
+                        <input matInput type="text" placeholder="" #addMenuInput   formControlName="title{{node.id}}">
+                        <button mat-button *ngIf="addMenuInput.value"  matSuffix mat-icon-button aria-label="Clear" (click)="addMenuInput.value = ''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                      </mat-form-field>
+                      <div class="buttonAndSpinner">
+                        <button mat-flat-button  [disabled]="addMenuInput.value == ''  " (click)="saveNewMenu(addMenuInput.value, node)">{{createMenuButton}}</button>
+                        <mat-spinner *ngIf="spinnerChild"></mat-spinner>
+                    </div>
+                    <div class="submitAlert" [class.submitError]="error">{{childrenFormAlert}}</div>
+                  </div>
+                  
+                  <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                    <ng-container cdkTreeNodeOutlet></ng-container>
+                  </div>
+                </cdk-nested-tree-node>
+            </cdk-tree>
+        </form>
+    </div>
+</div>

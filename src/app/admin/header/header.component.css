@@ -1,0 +1,18 @@
+/* .header-wrap{
+    height: 6rem;
+    width:100%;
+    background:#212529;
+} */
+mat-icon{
+    color: #fff;
+}
+.example-spacer {
+    flex: 1 1 auto;
+  }
+  mat-toolbar{
+    background:#1d2636;
+    background-image: linear-gradient(to right,rgba(13,230,255,0.15) 0%,rgba(201,189,174,0) 25%);
+  }
+  button.headerButton {
+      color: #fff;
+  }

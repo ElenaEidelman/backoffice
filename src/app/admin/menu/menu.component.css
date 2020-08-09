@@ -1,0 +1,58 @@
+.menu-wrap{
+
+}
+mat-icon,  mat-label    {
+    color:#fff;
+}
+.example-form-field {
+    width: 200px;
+  }
+  .createMenuForm{
+      margin: 10px;
+  }
+  .createMainMenu{
+    color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.5);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .openCreateMenuForm{
+    position: relative;
+    text-align: center;
+    bottom: -16px;
+  }
+  .viewMenu{
+    color:#fff;
+    padding-top: 2rem;
+  }
+  .addMenuForm{
+    padding: 1rem;
+    background: #343434;
+  }
+
+  a.nodeLink{
+    color:#fff;
+    cursor: pointer;
+  }
+  /*tree start*/
+  .example-tree-invisible {
+    display: none;
+  }
+  
+  .example-tree ul,
+  .example-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
+  .example-tree-node {
+    display: block;
+  }
+  
+  .example-tree-node .example-tree-node {
+    padding-left: 40px;
+  }
+  
+
+  /*tree end*/
