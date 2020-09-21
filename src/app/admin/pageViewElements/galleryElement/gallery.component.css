@@ -1,0 +1,84 @@
+.adminGalleryWrap{
+    display: flex;
+}
+.imgUploadForm{
+    flex-grow: 1;
+}
+.imgUploadForm > form{
+    display: flex;
+    flex-direction: column;
+}
+.imgUploadForm > form > .flexGalleryChild{
+    box-shadow: 0px 0px 2px;
+    padding: 10px;
+}
+.flexGalleryChild > div{
+    padding: 5px;
+}
+.imgUploadForm button{
+    background-color: rgb(17, 236, 229);
+    color: #000000;
+}
+.adminGallery{
+    flex-grow: 8;
+    max-height: 500px;
+    overflow: auto;
+}
+.flexChild{
+    padding: 10px;
+    background: #2c3749;
+    color: rgb(146, 171, 207);
+    border-radius: 10px;
+    margin: 5px 10px;
+}
+.flexChild mat-label{
+    color: rgb(146, 171, 207);
+}
+.flexGalleryChild{
+    margin: 10px 0;
+    padding: 0 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.uploadFlexChild{
+   text-align: center;
+}
+.uploadImgButton{
+    position: relative;
+    justify-content: center;
+}
+.galleryImgPreview{
+
+}
+.galleryImgPreview > img{
+    width: 120px;
+}
+.wrap-admin-gallery{
+    display: flex;
+    flex-wrap: wrap;
+}
+.imgBlock{
+    margin: 5px;
+    flex-grow: 1;
+    width: 150px;
+    position: relative;
+    cursor: pointer;
+}
+.imgBlock > img{
+    width: inherit;
+    height: 100px;
+    object-fit: cover;
+}
+.imgCover{
+    background: rgba(0,0,0,0.5);
+    width: inherit;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+}
+.imgCover mat-icon{
+    color:#fff;
+    margin: 5px;
+}

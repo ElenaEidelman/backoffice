@@ -1,15 +1,19 @@
 
 export const Alert = {
-    'eng' : {
+    'ENG' : {
         'alertSaved' : 'Saved successfully',
         'alertError' : 'Something went wrong, please try again later',
         'alertDelete' : 'Deleted successfuly',
-        'confirmDelete' : 'Delete?'
+        'confirmDelete' : 'Are you sure you want to delete?',
+        'yesButton': 'Yes',
+        'noButton': 'No'
     },
-    'heb' : {
+    'HEB' : {
         'alertSaved' : 'נשמר בהצלחה',
         'alertError' : 'קרתה שגיאה, נא לנסות שוב פעם מאוחר יותר',
         'alertDelete' : 'נמחק בהצלחה',
-        'confirmDelete' : 'האם למחוק?'
+        'confirmDelete' : 'האם למחוק?',
+        'yesButton': 'כן',
+        'noButton': 'לא'
     }
 }

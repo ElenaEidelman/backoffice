@@ -1,0 +1,18 @@
+
+<mat-dialog-content class="matDialogContent" [dir]="data['settings']['direction']" [style.textAlign]="data['settings']['direction'] == 'rtl' ? 'right' : 'left'">
+    {{data['question']}}
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button (click)="no()">{{noButtonName[data['settings']['language']].noButton}}</button> 
+    <button mat-button (click)="yes()">{{yesButtonName[data['settings']['language']].yesButton}}</button> 
+</mat-dialog-actions>
+<div>
+    <button mat-icon-button 
+                            class="dialogCloseButton" 
+                            [class.left50]="data['settings']['direction'] == 'rtl'" 
+                            [class.right50]="data['settings']['direction'] == 'ltr'"
+                            matTooltip="{{formTitle[data['settings']['language']].close}}">
+        <mat-icon (click) = "close()">close</mat-icon>
+    </button>
+</div>
+

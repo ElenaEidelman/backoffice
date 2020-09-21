@@ -14,6 +14,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatRadioModule} from '@angular/material/radio';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
+import {MatDialogModule} from '@angular/material/dialog';
+
+
+
 
 
 
@@ -24,6 +31,10 @@ import { LoginComponent } from './admin/login/login.component';
 import { HeaderComponent } from './admin/header/header.component';
 import { ContentComponent } from './admin/content/content.component';
 import { EditingComponent } from './admin/editing/editing.component';
+import { GalleryComponent, ImgModal } from './admin/pageViewElements/galleryElement/gallery.component';
+import { Dialog } from './admin/dialogs/dialog/dialog.component';
+import { DialogConfirm } from './admin/dialogs/dialog-confirm/dialog-confirm.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 
@@ -35,7 +46,11 @@ import { EditingComponent } from './admin/editing/editing.component';
     LoginComponent,
     HeaderComponent,
     ContentComponent,
-    EditingComponent
+    EditingComponent,
+    GalleryComponent,
+    Dialog,
+    ImgModal,
+    DialogConfirm
   ],
   imports: [
     BrowserModule,
@@ -53,9 +68,14 @@ import { EditingComponent } from './admin/editing/editing.component';
     QuillModule.forRoot(),
     FormsModule,
     MatCheckboxModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatMenuModule,
+    MatRadioModule,
+    Ng2ImgMaxModule,
+    MatDialogModule,
+    MatFormFieldModule
   ],
-  providers: [],
+  providers: [ImgModal,DialogConfirm,Dialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

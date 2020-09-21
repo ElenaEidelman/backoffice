@@ -27,8 +27,9 @@ mat-icon,  mat-label    {
     padding-top: 2rem;
   }
   .addMenuForm{
+    margin: 0px 3px;
     padding: 1rem;
-    background: #343434;
+    background: #24364E;
   }
 
   a.nodeLink{

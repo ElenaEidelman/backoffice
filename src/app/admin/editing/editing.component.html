@@ -1,15 +1,61 @@
-<div class="pageViewOptions">
-    <div>
-        <mat-icon>settings</mat-icon>
+<div class="componentWrapWrap">
+    <div class="drawerContainerWrap">
+        <mat-drawer-container class="example-container pageViewSettings" autosize >
+            <mat-drawer #settingsBlock class="example-sidenav" mode="side" position="{{settingsDrawerPosition}}">
+                <!-- position="{{settingsDrawerPosition}}" -->
+                <div class="settingWrap">
+                    <form [formGroup]="settingForm" class="pageEditingSettingsForm" *ngIf="settingFormView">
+                        <section class="checkBoxSection">
+                            <div *ngFor="let setting of pageSettingsArr">
+                                <mat-checkbox formControlName="{{setting.elementName}}" class="example-margin settingsPageCheckbox"
+                                    (change)="settingOptionsChange($event, setting)" (click)="$event.stopPropagation()">
+                                    {{setting.title}}
+                                </mat-checkbox>
+                            </div>
+                        </section>
+                    </form>
+                </div>
+                <div class="settingButton" (click)="savePageViewSettings()">
+                    <div class="submitAlert titleColor paddingBottom" [class.submitError]="errorSubmit" >{{savedTitle}}</div>
+                    <button mat-button>{{saveSettingsTitleButton}}</button>
+                </div>
+            </mat-drawer>
+            <div>
+                <div class="drawerbuttonsWrap">
+                    <div>
+                        <button mat-button (click)="settingsBlock.toggle()" class="pageViewSettingButton">
+                            <mat-icon matTooltip="{{editingSettingsTooltip}}">settings</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="settingsElementWrap">
+                            <div class="carousel settingElement" *ngIf="viewPageElemets.indexOf('carousel') != -1">
+                                carousel
+                            </div>
+                            <div class="editor settingElement" *ngIf="viewPageElemets.indexOf('editor') != -1">
+                                <quill-editor class="editor" [styles]="{height: '300px'}" (onEditorChanged)="changeEditor($event)" [placeholder] = "editorPlaceholder" ></quill-editor>
+                            </div> 
+                            <div class="gallery settingElement" *ngIf="viewPageElemets.indexOf('gallery') != -1">
+                                <app-gallery [settings]="settings" [editingPageId]="id" [pageSettings]="viewPageElemets"></app-gallery>
+                            </div>
+                            <div class="video settingElement" *ngIf="viewPageElemets.indexOf('video') != -1">
+                                video
+                            </div>
+                            <div class="statistics settingElement" *ngIf="viewPageElemets.indexOf('statistics') != -1">
+                                statistics
+                            </div>
+                            <div class="survey settingElement" *ngIf="viewPageElemets.indexOf('survey') != -1">
+                                survey
+                            </div>
+                            <div class="contactus settingElement" *ngIf="viewPageElemets.indexOf('contactUs') != -1">
+                                contact us
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-drawer-container>
     </div>
-    <div></div>
-    <div></div>
 </div>
-
-<!-- <div class="container">
-    <div class="row">
-        <div class="editor">
-            <quill-editor class="editor" [styles]="{height: '300px'}" (onEditorChanged)="changeEditor($event)" [placeholder] = "editorPlaceholder" ></quill-editor>
-        </div>
-    </div>
-</div> -->

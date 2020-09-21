@@ -1,16 +1,17 @@
-
-    <!-- <app-header></app-header>
+<div>
+    <app-header [settings]="settings"></app-header>
     <div class="content-menu-wrap">
-        <app-menu></app-menu>
-        <app-content></app-content>
-    </div> -->
+        <app-menu [settings]="settings"></app-menu>
+        <app-content [settings]="settings"></app-content>
+    </div>
+</div>
 
- <app-header></app-header>
- <mat-drawer-container class="example-container " autosize>
+<!-- <app-header></app-header>
+ <mat-drawer-container class="example-container globalMenu" autosize>
     <mat-drawer #drawer class="example-sidenav" mode="side" opened="true" position="{{matDrawerPOsition}}">
         <app-menu></app-menu>
     </mat-drawer>
-    <div class="example-sidenav-content">
-        <app-content></app-content> 
+    <div>
+        <router-outlet></router-outlet>
     </div>
-  </mat-drawer-container>
+  </mat-drawer-container> -->

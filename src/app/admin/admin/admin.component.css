@@ -1,7 +1,13 @@
 .content-menu-wrap{
-    display: flex;
-    min-height: calc(100% - 76px);
+     display: flex;
+     min-height: calc(100vh - 64px);
+     background: #0F1724;
+    /*flex-direction: row; */
 }
+.globalMenu{
+  height:auto;
+}
+
 
 /* .example-container {
     /* width: 500px;

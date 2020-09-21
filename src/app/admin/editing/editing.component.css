@@ -2,16 +2,63 @@
     background: #fff;
     color: #444444;
 }
-.pageViewOptions{
-    margin: 6px;
-    /* border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px; */
-    font-size: 20px;
-    font-weight: 200;
-    padding: 4px 8px;
-    /* background-color: #24364E;
-    background-image: linear-gradient(to right,rgba(13,230,255,0.15) 0%,rgba(201,189,174,0) 25%);
-    border-bottom: 1px solid rgba(0,0,0,0.5); 
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);*/
-    height: 2rem;
-}
+
+
+
+/*drawer start*/
+.example-container {
+    /* width: 100%; */
+    /*height: 300px;*/
+    /* border: 1px solid rgba(0, 0, 0, 0.5); */
+  }
+  
+  .settingsElementWrap{
+      display: flex;
+      flex-direction: column;
+  }
+  .example-sidenav-content {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .example-sidenav {
+    padding: 20px;
+  }
+  .componentWrapWrap{
+    /* display:flex; */
+  }
+  .drawerContainerWrap{
+      /*display:flex;*/
+      flex-grow: 0;
+  }
+  .drawerbuttonsWrap{
+       /*display:flex;*/
+       flex-grow: 0;
+       margin: 5px;
+  }
+  button.pageViewSettingButton{
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    background-color: rgb(17, 236, 229);
+  }
+  button.pageViewSettingButton mat-icon{
+      color: #010E0D;
+  }
+  .container{
+      flex-grow:2;
+  }
+  mat-drawer, mat-icon{
+      color: #fff;
+  }
+  /*drawer end*/
+
+  .settingsElementWrap{
+    width: 100%;
+  }
+  .settingElement{
+    background: rgb(29, 38, 54);
+    padding: 4px 0px;
+    border-radius: 4px;
+    margin: 8px 0px;
+  }

@@ -1,32 +1,33 @@
 import { Injectable, EventEmitter, DebugNode } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { GlobalSettings } from 'src/app/classes-const/globalSettings';
+import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { GetSetDataService } from '../getSetData/get-set-data.service';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class LanguageService {
+export class LanguageService implements Resolve<any> {
 
-  language = new EventEmitter<string>();
-  direction = new EventEmitter<string>();
-  currentLang: string = 'eng';
-  pageDirection: string = 'ltr';
-  textAlign: string;
 
-  constructor() {
-    this.language.emit(this.currentLang);
-    this.direction.emit(this.pageDirection);
-    document.body.dir = this.pageDirection;
-    document.body.style.textAlign = this.pageDirection == 'rtl' ? 'right' : 'left';
-   }
+  globalSettings: GlobalSettings; // not to be subscribed
 
-   changeLanguage(lng){
-     this.language.emit(lng);
-     let dir = lng != 'heb' ? 'ltr' : 'rtl';
-     this.direction.emit(dir);
-   }
-   getLanguage(){
-    return this.currentLang;
-   }
-   getDirection(){
-     return this.pageDirection;
-   }
+  baseUrl = 'http://localhost:8080/apiBackoffice';
+  constructor(private http: HttpClient, private getSetDataService: GetSetDataService) {
+    
+  }
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ){
+    return this.http.get(`${this.baseUrl}/getData/getSettings.php`).pipe(
+      map(settings => {
+        this.globalSettings = settings as GlobalSettings;
+        this.getSetDataService.emitGlobalsettings(settings as GlobalSettings);
+        return settings;
+      })
+    );
+  } 
 }

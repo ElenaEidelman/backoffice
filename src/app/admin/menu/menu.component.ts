@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, Validators, FormControl } from '@angular/forms';
 import { LanguageService } from '../../services/languages/languages.service';
 import { FormTitles } from '../../classes-const/menuFormTitles';
@@ -7,6 +7,7 @@ import { Menu } from '../../classes-const/menuClass';
 import { Alert } from '../../classes-const/alerts';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { ArrayDataSource } from '@angular/cdk/collections';
+import { GlobalSettings } from 'src/app/classes-const/globalSettings';
 
 @Component({
   selector: 'app-menu',
@@ -16,9 +17,12 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 
 export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  constructor(private fb: FormBuilder, private formService: LanguageService, private getSetData: GetSetDataService) { }
+  constructor(
+    private fb: FormBuilder, 
+    private getSetData: GetSetDataService,
+    private languageService: LanguageService) { }
 
-
+  @Input() settings;
   addMenuTooltip: string;
   createMenuTitle: string;
   createMenuButton: string;
@@ -30,8 +34,9 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
   idOfSelectedNode: number = -1;
   openFormButton: string = 'keyboard_arrow_down';
 
-  language: string;
-  languageToUnSub;
+  //language: string;
+  //languageToUnSub;
+  //direction: string;
   alert: string;
   childrenFormAlert: string;
   error: boolean = false;
@@ -53,31 +58,42 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
   hasChild = (_: number, node: Menu) => !!node.children && node.children.length > 0;
 
   ngOnInit(): void {
-    this.getLanguage();
-    this.getLanguageIfChange();
     this.getMenu();
+    this.configuration();
+    this.getLanguageIfChange();
   }
 
-  getLanguage() {
-    this.language = this.formService.getLanguage();
-    this.addMenuTooltip = FormTitles[this.language].tooltipAddMenu;
-    this.createMenuTitle = FormTitles[this.language].titleFormAddMenu;
-    this.createMenuButton = FormTitles[this.language].buttonSaveAddMenu;
-    this.titleInputAddMenu = FormTitles[this.language].titleInputAddMenu;
-    this.closeMenuTooltip = FormTitles[this.language].tooltipCloseMenu;
-  }
-  getLanguageIfChange() {
-    this.languageToUnSub = this.formService.language.subscribe(lng => {
-      this.language = lng;
-      this.addMenuTooltip = FormTitles[lng].tooltipAddMenu
-      this.createMenuTitle = FormTitles[lng].titleFormAddMenu;
-      this.createMenuButton = FormTitles[lng].buttonSaveAddMenu;
-      this.titleInputAddMenu = FormTitles[lng].titleInputAddMenu;
-      this.closeMenuTooltip = FormTitles[lng].tooltipCloseMenu;
+  configuration() {
+    this.configTitles(this.settings);
+
+    let menuElements = document.querySelectorAll('.createMainMenu');
+    menuElements.forEach((el, index) => {
+      (el as HTMLBodyElement).style.textAlign = this.settings['direction'] == 'rtl' ? 'right' : 'left';
+      (el as HTMLBodyElement).dir = this.settings['direction'];
+    });
+
+    document.querySelectorAll('cdk-tree').forEach(el => {
+      (el as HTMLBodyElement).style.textAlign = this.settings['direction'] == 'rtl' ? 'right' : 'left';
+    });
+    document.querySelectorAll('cdk-nested-tree-node > div > cdk-nested-tree-node').forEach(el => {
+      (el as HTMLBodyElement).style.paddingRight = this.settings['direction'] == 'rtl' ? '40px' : '0px';
+      (el as HTMLBodyElement).style.paddingLeft = this.settings['direction'] == 'rtl' ? '0px' : '40px';
     });
   }
+  configTitles(settings: GlobalSettings){
+    this.addMenuTooltip = FormTitles[settings['language']].tooltipAddMenu;
+    this.createMenuTitle = FormTitles[settings['language']].titleFormAddMenu;
+    this.createMenuButton = FormTitles[settings['language']].buttonSaveAddMenu;
+    this.titleInputAddMenu = FormTitles[settings['language']].titleInputAddMenu;
+    this.closeMenuTooltip = FormTitles[settings['language']].tooltipCloseMenu;
+  }
+  getLanguageIfChange() {
+    this.getSetData.settings.subscribe(settings => {
+      this.settings = settings;
+          this.configuration();
+        });
+  }
   openCreateMenu() {
-    debugger
     this.clickedToCreateMenu = !this.clickedToCreateMenu;
     this.openFormButton = this.clickedToCreateMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
   }
@@ -106,18 +122,20 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getSetData.saveMenu(newMenu).subscribe(saved => {
       this.error = saved.includes('SUCCESS') ? false : true;
       if (saved.includes('SUCCESS')) {
-        if (parentData != undefined) {
-          this.spinnerChild = false;
-          this.childrenFormAlert = saved.includes('SUCCESS') ? Alert[this.language].alertSaved : Alert[this.language].alertError;
-          // this.addMenuForm.get('title' + parentData.id).setValue('');
-          // this.addMenuFormView = 'addMenuFormView';
-        }
-        else {
-          this.spinner = false;
-          this.alert = saved.includes('SUCCESS') ? Alert[this.language].alertSaved : Alert[this.language].alertError;
-          this.createMenuForm.get('title').setValue('');
-          this.formView = false;
-        }
+        this.getSetData.settings.subscribe(settings => {
+          if (parentData != undefined) {
+            this.spinnerChild = false;
+            this.childrenFormAlert = saved.includes('SUCCESS') ? Alert[settings['language']].alertSaved : Alert[settings['language']].alertError;
+            // this.addMenuForm.get('title' + parentData.id).setValue('');
+            // this.addMenuFormView = 'addMenuFormView';
+          }
+          else {
+            this.spinner = false;
+            this.alert = saved.includes('SUCCESS') ? Alert[settings['language']].alertSaved : Alert[settings['language']].alertError;
+            this.createMenuForm.get('title').setValue('');
+            this.formView = false;
+          }
+        });
         this.getMenu();
       }
 
@@ -145,16 +163,9 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getSetData.getMenu().subscribe(menu => {
       this.menu = menu;
       this.dataSource = new ArrayDataSource(menu);
-      //change direction padding of maneu tree
-      setTimeout(()=>{
-        if (this.language == 'heb') {
-          let menuElements = document.querySelectorAll('.example-tree-node .example-tree-node');
-          menuElements.forEach(el => {
-            (el as HTMLBodyElement).style.paddingRight = '40px';
-            (el as HTMLBodyElement).style.paddingLeft = '0px';
-          });
-        }
-      },0);
+      setTimeout(() => {
+        this.configuration();
+      }, 0);
     });
   }
 
@@ -188,9 +199,11 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
   }
-  ngAfterViewInit() { }
+  ngAfterViewInit() {
+
+  }
 
   ngOnDestroy() {
-    this.languageToUnSub.unsubscribe();
+    //this.languageToUnSub.unsubscribe();
   }
 }

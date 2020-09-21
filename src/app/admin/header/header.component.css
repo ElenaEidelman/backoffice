@@ -15,4 +15,19 @@ mat-icon{
   }
   button.headerButton {
       color: #fff;
+      outline: none;
+  }
+
+  .wrapSettingBlock{
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    box-shadow: inset 0px 0px 20px;
+    margin: 5px 0;
+  }
+  mat-radio-button{
+      margin: auto 3px;
+  }
+  .wrapRadio{
+      display:flex;
   }

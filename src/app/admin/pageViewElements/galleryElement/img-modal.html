@@ -1,0 +1,10 @@
+
+<div class="imgDialogWrap" [dir]="data['direction']">
+    <span class="imgCloseTitleWrap">
+        <span>{{data['title']}}</span>
+        <mat-icon (click)="dialogClose()" [matTooltip]="data['closeTooltip']">close</mat-icon>
+    </span>
+    <div mat-dialog-content class="dialog">
+        <img [src]="data['imgPath']" width="100%">
+    </div>  
+</div>

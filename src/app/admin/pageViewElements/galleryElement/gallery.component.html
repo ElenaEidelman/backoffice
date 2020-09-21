@@ -1,0 +1,78 @@
+<div class="adminGalleryWrap">
+    <div class=" flexChild imgUploadForm">
+        <form [formGroup]="galleryForm">
+            <!-- add title of gallery -->
+            <mat-form-field class="flexGalleryChild" matTooltip="{{independentFieldTitle}}" matTooltipPosition="above">
+                <mat-label>
+                    {{galleryNameTitle}}
+                    <div class="infoBlock">
+                        <mat-icon>info</mat-icon>
+                        {{independentFieldTitle}}
+                    </div>
+                </mat-label>
+                <input matInput plaseholder formControlName="galleryName"  class="inputWithInfoInLabel">
+            </mat-form-field>
+            <mat-radio-group formControlName="imgResolution"  class="flexGalleryChild">
+                <mat-label>
+                    <div class="infoBlockNotMatField" matTooltip="{{infoImgSize}}">
+                        <mat-icon>info</mat-icon>
+                        {{infoImgSize}}
+                    </div>
+                </mat-label>
+                <mat-radio-button *ngFor="let resolution of resolutions" [value]="resolution['resolution']">{{resolution.resolution}}{{resolution.name != resolution.resolution ?  resolution.name : ''}}</mat-radio-button>
+            </mat-radio-group>
+            <mat-form-field class="flexGalleryChild">
+                <mat-label>{{imageFormTitle}}</mat-label>
+                <input matInput plaseholder formControlName="imageTitle">
+            </mat-form-field>
+
+            <!-- upload img to gallery -->
+            <section class="flexGalleryChild">
+                <div class="uploadImgButton uploadFlexChild importantButtonWrap">
+                    <div class="important">*</div>
+                    <div>
+                        <input type="file" #imgUploadFile [hidden]="true" name="imgfile" 
+                                                                        (change)="imgsUpload(imgUploadFile.value, $event)"
+                                                                        (click)="imgsUpload(imgUploadFile.value, $event)">
+                        <div class="submitAlert titleColor paddingBottom" [class.submitError]="errorImgSubmitTitle" >{{savedImgTitle}}</div>
+                        <button mat-button (click)="imgUploadFile.click()">
+                            {{uploadImgTitle}}
+                            <mat-icon>add_photo_alternate</mat-icon>
+                        </button>
+                        <mat-spinner *ngIf="imgSpinner"></mat-spinner>
+                    </div>
+                </div>
+                <div class="uploadFlexChild">
+                    <div *ngIf="imgSrcForView != ''" class="galleryImgPreview">
+                        <img src="data:{{imgTypeForView}};base64,{{imgSrcForView}}">
+                    </div>
+                    <div *ngIf="editSrcPreview != '' && imgSrcForView == ''" class="galleryImgPreview">
+                        <img [src]="editSrcPreview">
+                    </div>
+                </div>
+            </section>
+            <div class="saveButton">
+                <div class="submitAlert titleColor paddingBottom saveButonChild" [class.submitError]="errorSubmit" >{{savedImageTitle}}</div>
+                <div class="saveButonChild">
+                    <button mat-button (click)="saveGallery()" [disabled]="sendFormDisabled"
+                                                               [class.validFormButton]="!sendFormDisabled">{{saveGalleryButtonTitle}}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="flexChild adminGallery" *ngIf="pageData">
+
+        <section class="wrap-admin-gallery">
+            <div *ngFor="let gallery of pageData['gallery']" class="imgBlock" (click)="imgClicked(gallery)">
+                <span *ngIf="gallery['id'] == imgClickedId" class="imgCover">
+                    <mat-icon (click)="editImage(gallery)" matTooltip="{{editImgTooltip}}">edit</mat-icon>
+                    <mat-icon (click)=imgFullScreen(gallery)  matTooltip="{{fullScreenImgTooltip}}">fullscreen</mat-icon>
+                    <mat-icon (click)=deleteImg(gallery)  matTooltip="{{deleteImgTooltip}}">delete</mat-icon>
+                </span>
+                <img *ngIf="gallery['img_path']" [src]="modePath(gallery['img_path'])">
+            </div>
+        </section>
+    </div>
+</div>
+
