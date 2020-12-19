@@ -8,7 +8,7 @@
                             [class.left50]="data['settings']['direction'] == 'rtl'" 
                             [class.right50]="data['settings']['direction'] == 'ltr'"
                             matTooltip="{{formTitle[data['settings']['language']].close}}">
-        <mat-icon (click) = "close()">close</mat-icon>
+        <mat-icon (click) = "close()" [matTooltip]="data['closeTooltip']">close</mat-icon>
     </button>
 </div>
 <!-- </mat-dialog-actions> -->

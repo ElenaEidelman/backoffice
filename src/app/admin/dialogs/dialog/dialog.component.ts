@@ -6,6 +6,7 @@ import { OtherTitles } from 'src/app/classes-const/Titles';
 export interface DialogData{
   text: string;
   settings: string;
+  closeTooltip: string;
 }
 @Component({
   selector: 'app-dialog',

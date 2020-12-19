@@ -173,15 +173,19 @@ input.inputWithInfoInLabel{
     padding-top: 30px
 }
 .infoBlock{
-    font-size: 15px;
+    font-size: 13px;
     margin: 7px 0;
     color: rgb(17, 236, 229);
+}
+.infoBlock > mat-icon{
+    font-size: 16px !important;
 }
 .infoBlockNotMatField{
     font-size: 10px;
     margin: 7px 0;
     color: rgb(17, 236, 229);
     line-height: 14px;
+    display: flex;
 }
 .infoBlockNotMatField > mat-icon{
     font-size: 12px;
@@ -205,3 +209,74 @@ input.inputWithInfoInLabel{
     overflow: auto;
     pointer-events: auto;  
   }
+
+  .formButton button{
+    background-color: rgb(17, 236, 229);
+    color: #000000;
+  }
+  div.formButton mat-icon{
+    color: #000000;
+  }
+  .deleteButton{
+    background-color: transparent !important;
+  }
+
+  .marginButton{
+    display: flex;
+    justify-content: center;
+    margin: 2em;
+  }
+  .marginElement{
+    margin: 10px 0;
+  }
+  .wrapElement{
+    display: flex;
+    background: rgb(29, 38, 54);
+  }
+  .elementChild{
+    padding: 10px;
+    background: #2c3749;
+    color: rgb(146, 171, 207);
+    border-radius: 10px;
+    margin: 5px;
+  }
+
+    .bigElementChild{
+        width: 100%;
+        overflow: auto;
+    }
+ .wrapForm{
+    box-shadow: 0px 0px 2px;
+    padding: 10px;
+ }
+ .wrapRadioForm{
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+ }
+ .formButton{
+    /* background-color: rgb(17, 236, 229); */
+    color: #000000;
+ }
+  /* rewrite */
+
+  .mat-expansion-panel{
+      background: #1D2636;
+  }
+  .mat-expansion-panel-body {
+    padding: 0 10px 16px !important;
+}
+.mat-expansion-panel-header-title {
+    color: rgba(17,236,229, 0.87);
+}
+.mat-expansion-panel-header-description, .mat-expansion-indicator::after {
+    color: rgba(17,236,229, 0.54);
+}
+.backgroundWrap{
+    padding: 10px;
+    background: #2c3749;
+    color: rgb(146, 171, 207);
+    border-radius: 10px;
+    margin: 5px;
+}

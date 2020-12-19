@@ -18,6 +18,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatRadioModule} from '@angular/material/radio';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 
@@ -35,6 +36,10 @@ import { GalleryComponent, ImgModal } from './admin/pageViewElements/galleryElem
 import { Dialog } from './admin/dialogs/dialog/dialog.component';
 import { DialogConfirm } from './admin/dialogs/dialog-confirm/dialog-confirm.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { EditorElementComponent } from './admin/pageViewElements/editor-element/editor-element.component';
+import { IOPipe } from './admin/Pipes/Iterable object/io.pipe';
+import { FluppPipe } from './admin/Pipes/flupp.pipe';
+import { StatisticElementComponent } from './admin/pageViewElements/statistic-element/statistic-element.component';
 
 
 
@@ -50,7 +55,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     GalleryComponent,
     Dialog,
     ImgModal,
-    DialogConfirm
+    DialogConfirm,
+    EditorElementComponent,
+    IOPipe,
+    FluppPipe,
+    StatisticElementComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +82,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatRadioModule,
     Ng2ImgMaxModule,
     MatDialogModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatExpansionModule
   ],
   providers: [ImgModal,DialogConfirm,Dialog],
   bootstrap: [AppComponent]

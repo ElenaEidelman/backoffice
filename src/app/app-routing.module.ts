@@ -9,11 +9,13 @@ import { LanguageService } from './services/languages/languages.service';
 
 const routes: Routes = [
   {path: "", component: LoginComponent},
-  {path: "admin", component:AdminComponent, resolve: {
-    settings: LanguageService
-  } ,children :[
-    {path: "editing/:id", component: EditingComponent}
-  ], canActivate: [AdminLoginGuard]}
+  {path: "admin", component:AdminComponent, 
+      resolve: {settings: LanguageService},
+      children :[
+                {path: "editing/:id", component: EditingComponent}
+                ],
+      canActivate: [AdminLoginGuard]
+  }
 ];
 
 @NgModule({

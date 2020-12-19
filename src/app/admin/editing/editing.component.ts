@@ -1,6 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ViewContainerRef, TemplateRef, HostListener, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { LanguageService } from 'src/app/services/languages/languages.service';
 import { FormTitles } from '../../classes-const/menuFormTitles';
 import { OtherTitles } from '../../classes-const/Titles';
@@ -8,6 +7,8 @@ import { OtherTitles } from '../../classes-const/Titles';
 import { GetSetDataService } from 'src/app/services/getSetData/get-set-data.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { GlobalSettings } from 'src/app/classes-const/globalSettings';
+import { ButtonsName } from 'src/app/classes-const/buttons';
+
 
 @Component({
   selector: 'app-editing',
@@ -16,17 +17,30 @@ import { GlobalSettings } from 'src/app/classes-const/globalSettings';
 })
 export class EditingComponent implements OnInit, OnDestroy {
 
+
   constructor(
     private activatedRoute: ActivatedRoute, 
     private languageService: LanguageService,
     private getSetData: GetSetDataService,
     private fb: FormBuilder) {
-
    }
+
   editingSettingsTooltip: string = '';
-  editorPlaceholder: string = '';
   id:any;
   idUnsubscribe;
+
+  @ViewChild('viewGalleryContainer', {read: ViewContainerRef}) viewGalleryContainer: ViewContainerRef;
+  @ViewChild('galleryTemplate') galleryTemplate: TemplateRef<any>;
+
+  @ViewChild('viewEditorContainer', {read: ViewContainerRef}) viewEditorContainer: ViewContainerRef;
+  @ViewChild('editorTemplate', {read: TemplateRef}) editorTemplate: TemplateRef<any>;
+
+  @ViewChild('viewStatisticContainer', {read: ViewContainerRef}) viewStatisticContainer: ViewContainerRef;
+  @ViewChild('statisticTemplate', {read: TemplateRef}) statisticTemplate: TemplateRef<any>;
+
+
+
+
 
   pageSettingsArr = [];
   viewPageElemets = [];
@@ -39,13 +53,20 @@ export class EditingComponent implements OnInit, OnDestroy {
   allPageSettingView: boolean = false;
   savedTitle: string = '';
   errorSubmit: boolean = false;
+  createGalleryTooltip: string = '';
+  data;
+  createGalleryButton: string = '';
+  createdGallery: boolean = false;
+
+  createEditorButton: string = '';
+  //createdEditor: boolean = false;
 
   ngOnInit(): void {
     this.idUnsubscribe = this.activatedRoute.params.subscribe(prm => {
       this.id = prm['id'];
       this.getLanguage();
-      this.getLanguageIfChange();
     });
+    this.getLanguageIfChange();
   }
   getLanguage(){
       this.getSetData.getSettings().subscribe(settings => {
@@ -56,9 +77,12 @@ export class EditingComponent implements OnInit, OnDestroy {
   }
   configuration(settings: GlobalSettings){
     this.settingsDrawerPosition = settings['direction'] == 'ltr' ? 'start' : 'end';    
-    this.editorPlaceholder = OtherTitles[settings['language']].editorPlaceholder;
+    //this.editorPlaceholder = OtherTitles[settings['language']].editorPlaceholder;
     this.editingSettingsTooltip = OtherTitles[settings['language']].editingSettingTooltip;
     this.saveSettingsTitleButton = OtherTitles[settings['language']].saveButton;
+    this.createGalleryTooltip = FormTitles[settings['language']].createGallery;
+    this.createGalleryButton = ButtonsName[this.settings['language']].createGalleryButton;
+    this.createEditorButton = ButtonsName[this.settings['language']].createEditorButton;
 
     document.querySelectorAll('form.pageEditingSettingsForm').forEach(el => {
       (el as HTMLBodyElement).style.textAlign = settings['direction'] == 'rtl' ? 'right' : 'left';
@@ -71,9 +95,6 @@ export class EditingComponent implements OnInit, OnDestroy {
       this.configuration(settings);
       this.fillPageSettings(settings['language']);
     });
-  }
-  changeEditor(event: EditorChangeContent | EditorChangeSelection){
-    console.log(event['editor']['root']['innerHTML']);
   }
   fillPageSettings(lng){
    this.getSetData.getSettingsforEditingPage(this.id).subscribe(settings => {
@@ -89,6 +110,7 @@ export class EditingComponent implements OnInit, OnDestroy {
         this.pageSettingsArr.push(element);
       });
       this.getSetData.fillPageSettings(this.viewPageElemets);
+      this.queryByPageSettings();
     });
   }
   settingOptionsChange(event, value){
@@ -102,7 +124,9 @@ export class EditingComponent implements OnInit, OnDestroy {
     if(event.checked){
      
      if(elementOfPageExist == -1){
-      this.viewPageElemets.push(value.elementName)
+      this.viewPageElemets.push(value.elementName);
+      //get new data
+      this.queryByPageSettings();
      }
     }
     else{
@@ -132,6 +156,47 @@ export class EditingComponent implements OnInit, OnDestroy {
      }
    });
   }
+  queryByPageSettings() {
+    //debugger
+    let dataToDb = {
+      pageId: this.id,
+      pageSettings: this.viewPageElemets
+    }
+    this.getSetData.getDataByPage(dataToDb).subscribe(data => {
+      //debugger
+      if(this.viewGalleryContainer != undefined){
+        this.viewGalleryContainer.remove();
+      }
+      if(this.viewEditorContainer != undefined){
+        this.viewEditorContainer.remove();
+      }
+
+      if(this.viewStatisticContainer != undefined){
+        this.viewStatisticContainer.remove();
+      }
+      this.data = data;
+
+    });
+}
+  createNewGallery() {
+    //Destroys all views in this container.
+    this.viewGalleryContainer.clear();
+    const galleryTemplate = this.galleryTemplate.createEmbeddedView(null);
+    this.viewGalleryContainer.insert(galleryTemplate);
+    this.createdGallery = true;
+    document.getElementById('viewGalleryContainer').scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+  createNewEditor(){
+    //Destroys all views in this container.
+    this.viewEditorContainer.clear();
+    const editorTemplate = this.editorTemplate.createEmbeddedView(null);
+    this.viewEditorContainer.insert(editorTemplate);
+    document.getElementById('viewEditorContainer').scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
   resetForm(){
     this.settingFormView = false;
     setTimeout(()=>{
@@ -142,5 +207,4 @@ export class EditingComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.idUnsubscribe.unsubscribe();
   }
-
 }

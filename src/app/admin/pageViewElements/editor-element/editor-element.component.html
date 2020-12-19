@@ -1,0 +1,25 @@
+<div>
+    <div class="formButton marginElement">
+        <button mat-button (click)="deleteCurrentEditor()" [disabled]="deleteButtonDisabled"
+                                                            [class.deleteButton]="deleteButtonDisabled">
+            <mat-icon>delete_outline</mat-icon>
+            {{deleteEditorButtonName}}
+        </button>
+    </div>
+    <div>
+        <form [formGroup]="editFormGroup">
+            <div class="editor">
+                <quill-editor class="editor" [styles]="{height: '300px'}" formControlName="editor" (onEditorChanged)="changeEditor($event)" ></quill-editor>
+            </div>
+        </form>
+    </div>
+    <div class="saveButton formButton marginButton">
+        <div class="submitAlert titleColor paddingBottom saveButonChild" [class.submitError]="errorSubmit" >{{savedEditorMessage}}</div>
+        <div class="saveButonChild">
+            <button mat-button (click)="saveData()" [disabled]="sendFormDisabled"
+                                                    [class.validFormButton]="!sendFormDisabled">{{saveEditorButtonTitle}}
+            </button>
+        </div>
+    </div>
+</div>
+

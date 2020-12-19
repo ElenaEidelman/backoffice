@@ -28,34 +28,159 @@
                         </button>
                     </div>
                 </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="settingsElementWrap">
-                            <div class="carousel settingElement" *ngIf="viewPageElemets.indexOf('carousel') != -1">
+                <div class="settingsElementWrap">
+                    <mat-accordion>
+                        <!-- carousel -->
+                        <mat-expansion-panel *ngIf="viewPageElemets.indexOf('carousel') != -1 && data">
+                          <mat-expansion-panel-header>
+                            <mat-panel-title>{{pageSettingsArr[0].title | flupp}}</mat-panel-title>
+                            <mat-panel-description></mat-panel-description>
+                          </mat-expansion-panel-header>
+                            <div class="carousel settingElement">
                                 carousel
                             </div>
-                            <div class="editor settingElement" *ngIf="viewPageElemets.indexOf('editor') != -1">
-                                <quill-editor class="editor" [styles]="{height: '300px'}" (onEditorChanged)="changeEditor($event)" [placeholder] = "editorPlaceholder" ></quill-editor>
+                        </mat-expansion-panel>
+
+                        <!-- editor -->
+                        <mat-expansion-panel *ngIf="viewPageElemets.indexOf('editor') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[1].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="settingElement">
+                                <div>
+                                    <div class="formButton marginElement">
+                                        <button mat-button (click)="createNewEditor()" [matTooltip]="createGalleryTooltip">
+                                            <mat-icon>create</mat-icon>
+                                            {{createEditorButton}}
+                                        </button>
+                                    </div>
+                                        <section *ngFor="let editor of data['editor']">
+                                            <div class="backgroundWrap">
+                                                <app-editor-element
+                                                    [data]="editor"
+                                                    [settings]="settings" 
+                                                    [editingPageId]="id" 
+                                                    [pageSettings]="viewPageElemets" 
+                                                    (dataFromParent)="queryByPageSettings()">
+                                                </app-editor-element>
+                                            </div>
+                                        </section>
+                                    <!--for new editor-->
+                                    <div id="viewEditorContainer"></div><!--for scrolling-->
+                                    <ng-container #viewEditorContainer></ng-container>
+                                </div>
                             </div> 
-                            <div class="gallery settingElement" *ngIf="viewPageElemets.indexOf('gallery') != -1">
-                                <app-gallery [settings]="settings" [editingPageId]="id" [pageSettings]="viewPageElemets"></app-gallery>
+                          </mat-expansion-panel>
+
+                          <!-- gallery -->
+                          <mat-expansion-panel *ngIf="viewPageElemets.indexOf('gallery') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[2].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="gallery settingElement">
+                                <div class="formButton">
+                                    <button mat-button (click)="createNewGallery()" [matTooltip]="createGalleryTooltip">
+                                        <mat-icon>add_photo_alternate</mat-icon>
+                                        {{createGalleryButton}}
+                                    </button>
+                                </div>
+                              
+                                    <section *ngFor="let galleryData of data['gallery'] | iO" class="gallerySection">
+                                        <app-gallery  
+                                                    [settings]="settings" 
+                                                    [editingPageId]="id" 
+                                                    [pageSettings]="viewPageElemets" 
+                                                    [data]="galleryData"
+                                                    (dataFromParent)="queryByPageSettings()">
+                                        </app-gallery>
+                                    </section>
+                                <!--for new gallery-->
+                                <div id="viewGalleryContainer"></div><!--for scrolling-->
+                                <ng-container #viewGalleryContainer></ng-container>
                             </div>
-                            <div class="video settingElement" *ngIf="viewPageElemets.indexOf('video') != -1">
+                          </mat-expansion-panel>
+
+                          <!-- video -->
+                          <mat-expansion-panel *ngIf="viewPageElemets.indexOf('video') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[3].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="video settingElement">
                                 video
                             </div>
-                            <div class="statistics settingElement" *ngIf="viewPageElemets.indexOf('statistics') != -1">
-                                statistics
+                          </mat-expansion-panel>
+
+                          <!-- statistics -->
+                          <mat-expansion-panel *ngIf="viewPageElemets.indexOf('statistics') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[4].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="statistics settingElement">
+                                <ng-container>
+                                    <section *ngFor="let stat of data['statistics']">
+                                        <app-statistic-element
+                                            [settings]="settings"
+                                        >
+                                        </app-statistic-element>
+                                    </section>
+                                </ng-container>
                             </div>
-                            <div class="survey settingElement" *ngIf="viewPageElemets.indexOf('survey') != -1">
+                          </mat-expansion-panel>
+
+                          <!-- survey -->
+                          <mat-expansion-panel *ngIf="viewPageElemets.indexOf('survey') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[5].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="survey settingElement">
                                 survey
                             </div>
-                            <div class="contactus settingElement" *ngIf="viewPageElemets.indexOf('contactUs') != -1">
+                          </mat-expansion-panel>
+
+                          <!-- contact us -->
+                          <mat-expansion-panel *ngIf="viewPageElemets.indexOf('contactUs') != -1 && data">
+                            <mat-expansion-panel-header>
+                              <mat-panel-title>{{pageSettingsArr[6].title | flupp}}</mat-panel-title>
+                              <mat-panel-description></mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <div class="contactus settingElement">
                                 contact us
                             </div>
-                        </div>
-                    </div>
+                          </mat-expansion-panel>
+                      </mat-accordion>
                 </div>
             </div>
         </mat-drawer-container>
     </div>
+    <!-- aditional elements -->
+
+    <!--gallery template-->
+<ng-template #galleryTemplate>
+    <app-gallery 
+                [settings]="settings" 
+                [editingPageId]="id" 
+                [pageSettings]="viewPageElemets" 
+                [createdGallery]="createdGallery"
+                (dataFromParent)="queryByPageSettings()">
+    </app-gallery>
+</ng-template>
+
+   <!--editor template-->
+    <ng-template #editorTemplate>
+        <div class="backgroundWrap">
+            <app-editor-element
+                [settings]="settings" 
+                [editingPageId]="id" 
+                [pageSettings]="viewPageElemets"
+                (dataFromParent)="queryByPageSettings()">
+            </app-editor-element>
+        </div>
+    </ng-template>
 </div>
+
+

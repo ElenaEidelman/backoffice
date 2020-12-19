@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { Alert } from '../../classes-const/alerts';
 import { MatDrawer } from '@angular/material/sidenav';
 import { GlobalFunctionsService } from 'src/app/services/globalFunctions/global-functions.service';
@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit, AfterViewInit, OnDestroy {
+
 
   @ViewChild('drawer') public globalMenu: MatDrawer;
   matDrawerPOsition: string;

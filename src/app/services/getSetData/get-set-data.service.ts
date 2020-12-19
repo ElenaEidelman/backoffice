@@ -77,7 +77,7 @@ export class GetSetDataService {
     this.settings.emit(settings);
   }
 
-  saveImageToGallery(data){
+  saveGallery(data){
     return this.http.post(`${this.baseUrl}/addSave/saveGallery.php`,data,{responseType: 'text'}).pipe(
       map(result => {
         
@@ -94,5 +94,27 @@ export class GetSetDataService {
   }
   fillPageSettings(settings: any){
     this.pageSettings.emit(settings);
+  }
+  deleteGallery(galleryId: number){
+    return this.http.post(`${this.baseUrl}/deleteData/deleteGallery.php`,galleryId, {responseType: 'text'}).pipe(
+      map(result => {
+        return result;
+      })
+    );
+  }
+  saveEditor(data: any){
+    return this.http.post(`${this.baseUrl}/addSave/addEditor.php`,data, {responseType: "text"}).pipe(
+      map((result: any) => {
+        return result;
+      })
+    );
+  }
+  deleteEditor(id: number){
+    debugger
+    return this.http.post(`${this.baseUrl}/deleteData/deleteEditor.php`, id, {responseType:'text'}).pipe(
+      map(result => {
+        return result;
+      })
+    );
   }
 }

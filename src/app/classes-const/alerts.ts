@@ -6,7 +6,8 @@ export const Alert = {
         'alertDelete' : 'Deleted successfuly',
         'confirmDelete' : 'Are you sure you want to delete?',
         'yesButton': 'Yes',
-        'noButton': 'No'
+        'noButton': 'No',
+        'lastImage': 'Last image, gallery will be deleted, continue?'
     },
     'HEB' : {
         'alertSaved' : 'נשמר בהצלחה',
@@ -14,6 +15,7 @@ export const Alert = {
         'alertDelete' : 'נמחק בהצלחה',
         'confirmDelete' : 'האם למחוק?',
         'yesButton': 'כן',
-        'noButton': 'לא'
+        'noButton': 'לא',
+        'lastImage': '?התמונה האחרונה, הגלריה תימחק,האם להמשיך?'
     }
 }

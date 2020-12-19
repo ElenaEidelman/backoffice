@@ -1,0 +1,1 @@
+1.fillPageByDat (gallery.component.ts) must check expression of galleryName and galleryId (need to change expression)

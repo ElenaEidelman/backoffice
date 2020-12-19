@@ -1,0 +1,64 @@
+<div class="wrapElement">
+    <div class="elementChild smallElementChild">
+        <div>
+            <form [formGroup]="statFormGroup">
+                <label>Pick your option to upload data</label>
+                <mat-radio-group formControlName="optionToUpload" class="mat-radio-group wrapForm wrapRadioForm">
+                    <div class="infoBlockNotMatField" matTooltip="uploadinFileTooltip">
+                        <mat-icon>info</mat-icon> 
+                        <div>
+                            Uploading file must to be on json format 
+                            <a (click)="jsonForExample()">click for example</a>
+                        </div>
+                    </div>
+                    <mat-radio-button *ngFor="let upOption of UploadOptions" [value]="upOption" (change)="radioFormChanged($event)">
+                        {{upOption}}
+                    </mat-radio-button>
+                    <div *ngIf="optionToUploadTemp.includes('File')">
+                        <div>
+                            <input type="file" #uploadJsonFile [hidden]="true">
+                            <button mat-button (click)="uploadJsonFile.click()" class="formButton">
+                                <mat-icon>attach_file</mat-icon>
+                                Upload file
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="optionToUploadTemp.includes('Manually')">
+                        <div>
+                            <form [groupName]="dataStatForm">
+                                <mat-form-field class="flexGalleryChild">
+                                    <mat-label>Y</mat-label>
+                                    <input matInput plaseholder>
+                                </mat-form-field>
+                                <mat-form-field class="flexGalleryChild">
+                                    <mat-label>X</mat-label>
+                                    <input matInput plaseholder>
+                                </mat-form-field>
+                            </form>
+                            <button mat-button (click)="addDataToGraph()" class="formButton">
+                                <mat-icon>add</mat-icon>
+                                Add to graph
+                            </button>
+                        </div>
+                    </div>
+                </mat-radio-group>
+
+                <label>Type of Graph</label>
+                <mat-radio-group class="mat-radio-group wrapForm wrapRadioForm" formControlName="graphType">
+                    <mat-radio-button *ngFor="let graphType of graphTypesArr" [value]="graphType"  (change)="radioFormChanged($event)">
+                        {{graphType}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </form>
+        </div>
+        <div class="saveButton">
+            <div class="submitAlert titleColor paddingBottom saveButonChild" [class.submitError]="errorSubmit" >saved alert</div>
+            <div class="saveButonChild">
+                <button mat-button (click)="saveStatisticData" [disabled]="sendFormDisabled"
+                                                           [class.validFormButton]="!sendFormDisabled">saved success/error
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="elementChild bigElementChild"></div>
+</div>

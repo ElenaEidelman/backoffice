@@ -1,8 +1,11 @@
 .adminGalleryWrap{
     display: flex;
+    background: rgb(29, 38, 54);
 }
+
 .imgUploadForm{
-    flex-grow: 1;
+    /* flex-grow: 1; */
+    height: fit-content;
 }
 .imgUploadForm > form{
     display: flex;
@@ -20,8 +23,9 @@
     color: #000000;
 }
 .adminGallery{
-    flex-grow: 8;
-    max-height: 500px;
+    /* flex-grow: 8; */
+    /* max-height: 500px; */
+    width:100%;
     overflow: auto;
 }
 .flexChild{
@@ -29,7 +33,7 @@
     background: #2c3749;
     color: rgb(146, 171, 207);
     border-radius: 10px;
-    margin: 5px 10px;
+    margin: 5px;
 }
 .flexChild mat-label{
     color: rgb(146, 171, 207);

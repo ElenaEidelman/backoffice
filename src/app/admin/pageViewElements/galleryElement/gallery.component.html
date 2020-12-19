@@ -1,16 +1,24 @@
 <div class="adminGalleryWrap">
-    <div class=" flexChild imgUploadForm">
+    <!--gallery form-->
+    <div class=" flexChild imgUploadForm" #galleryFormDomElement>
         <form [formGroup]="galleryForm">
             <!-- add title of gallery -->
-            <mat-form-field class="flexGalleryChild" matTooltip="{{independentFieldTitle}}" matTooltipPosition="above">
+            <div class="formButton">
+                <button mat-button (click)="deleteCurrentGallery()" [disabled]="deleteButtonDisabled"
+                                                                    [class.deleteButton]="deleteButtonDisabled">
+                    <mat-icon>delete_outline</mat-icon>
+                    {{deleteGalleryButton}}
+                </button>
+            </div>
+            <mat-form-field class="flexGalleryChild" matTooltip="{{independentFieldTooltip}}" matTooltipPosition="above">
                 <mat-label>
                     {{galleryNameTitle}}
-                    <div class="infoBlock">
-                        <mat-icon>info</mat-icon>
+                    <div class="infoBlock" >
+                        <mat-icon >info</mat-icon>
                         {{independentFieldTitle}}
                     </div>
                 </mat-label>
-                <input matInput plaseholder formControlName="galleryName"  class="inputWithInfoInLabel">
+                <input matInput formControlName="galleryName"  class="inputWithInfoInLabel">
             </mat-form-field>
             <mat-radio-group formControlName="imgResolution"  class="flexGalleryChild">
                 <mat-label>
@@ -29,15 +37,15 @@
             <!-- upload img to gallery -->
             <section class="flexGalleryChild">
                 <div class="uploadImgButton uploadFlexChild importantButtonWrap">
-                    <div class="important">*</div>
+                    <div class="important"  *ngIf="pageData.length == 0">*</div>
                     <div>
                         <input type="file" #imgUploadFile [hidden]="true" name="imgfile" 
                                                                         (change)="imgsUpload(imgUploadFile.value, $event)"
                                                                         (click)="imgsUpload(imgUploadFile.value, $event)">
                         <div class="submitAlert titleColor paddingBottom" [class.submitError]="errorImgSubmitTitle" >{{savedImgTitle}}</div>
                         <button mat-button (click)="imgUploadFile.click()">
-                            {{uploadImgTitle}}
                             <mat-icon>add_photo_alternate</mat-icon>
+                            {{uploadImgTitle}}
                         </button>
                         <mat-spinner *ngIf="imgSpinner"></mat-spinner>
                     </div>
@@ -61,10 +69,10 @@
             </div>
         </form>
     </div>
+    <!--list of images-->
     <div class="flexChild adminGallery" *ngIf="pageData">
-
         <section class="wrap-admin-gallery">
-            <div *ngFor="let gallery of pageData['gallery']" class="imgBlock" (click)="imgClicked(gallery)">
+            <div *ngFor="let gallery of pageData | iO" class="imgBlock" (click)="imgClicked(gallery)">
                 <span *ngIf="gallery['id'] == imgClickedId" class="imgCover">
                     <mat-icon (click)="editImage(gallery)" matTooltip="{{editImgTooltip}}">edit</mat-icon>
                     <mat-icon (click)=imgFullScreen(gallery)  matTooltip="{{fullScreenImgTooltip}}">fullscreen</mat-icon>
@@ -75,4 +83,3 @@
         </section>
     </div>
 </div>
-

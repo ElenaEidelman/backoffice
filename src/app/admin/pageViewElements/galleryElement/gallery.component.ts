@@ -1,4 +1,17 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy, Inject, OnChanges } from '@angular/core';
+import { 
+  Component, 
+  OnInit, 
+  Input, 
+  ViewChild, 
+  OnDestroy, 
+  Inject, 
+  OnChanges, 
+  ElementRef, 
+  AfterViewInit, 
+  ViewContainerRef, 
+  TemplateRef, 
+  Output, 
+  EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { OtherTitles } from 'src/app/classes-const/Titles';
 import { FormTitles } from 'src/app/classes-const/menuFormTitles';
@@ -11,7 +24,8 @@ import { DeleteDataService } from 'src/app/services/deleteData/delete-data.servi
 import { ConfirmData, DialogConfirm } from '../../dialogs/dialog-confirm/dialog-confirm.component';
 import { Alert } from 'src/app/classes-const/alerts';
 import { Dialog } from '../../dialogs/dialog/dialog.component';
-import { ScrollDispatcher } from '@angular/cdk/overlay';
+import { InfoTooltip } from '../../../classes-const/info';
+import { ButtonsName } from '../../../classes-const/buttons';
 
 
 
@@ -20,7 +34,7 @@ import { ScrollDispatcher } from '@angular/cdk/overlay';
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
+export class GalleryComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   constructor(
     private fb: FormBuilder, 
@@ -33,7 +47,11 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   @Input() settings;
   @Input() editingPageId;
   @Input() pageSettings;
+  @Input() data;
+  @Input() createdGallery;
+  @Output('dataFromParent') dataFromParent: EventEmitter<any> = new EventEmitter();
   @ViewChild('imgUploadFile') imgUploadFile;
+  @ViewChild('galleryFormDomElement') galleryFormDomElement: ElementRef;
   galleryNameTitle: string = '';
   uploadImgTitle: string = '';
   savedImgTitle: string = '';
@@ -53,10 +71,12 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   deleteImgTooltip: string = '';
   editSrcPreview: string = '';
   independentFieldTitle: string = '';
+  independentFieldTooltip: string = '';
   infoImgSize: string = '';
   selectedImgToEdit: string = '';
-  //galleryNameChanged: boolean = false;
+  deleteButtonDisabled: boolean = true;
   sendFormDisabled: boolean = true;
+  deleteGalleryButton: string = '';
   resolutions = [
     {name:'','resolution':'640 x 480'},
     {name:'','resolution':'800 x 600'},
@@ -74,6 +94,7 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   pageData;
 
   galleryForm = this.fb.group({
+    galleryId: [''],
     pageId: [''],
     galleryName: [''],
     imageTitle: [''],
@@ -82,8 +103,9 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   });
 
   ngOnInit(): void {
-    this.queryByPageSettings();
+    // this.queryByPageSettings();
     this.queryByPageSettingsIfChange();
+    this.configuration(this.data);
     this.configurationIfLanguageChange();
   }
   queryByPageSettings() {
@@ -91,20 +113,38 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
       pageId: this.editingPageId,
       pageSettings: this.pageSettings
     }
+    debugger
     this.getSetData.getDataByPage(dataToDb).subscribe(data => {
-      this.configuration(data);
+      debugger
+      //check if several galleries
+      //where gallery is saving, gallery id is saving on variable FormData
+      //but, if we need to create gallery, still no have id, so, can recive id from last list of data
+      let currentGalleryId = this.galleryForm.get('galleryId').value != "" && Object.keys(data['gallery']).indexOf(this.galleryForm.get('galleryId').value) > -1 ? this.galleryForm.get('galleryId').value : +Object.keys(data['gallery'])[Object.keys(data['gallery']).length - 1];
+      if(data['gallery'] != undefined){
+        if(Object.entries(data['gallery']).length > 1){
+          this.configuration(data['gallery'][+currentGalleryId]);
+        }
+        else{
+          this.configuration(data['gallery'][Object.keys(data['gallery'])]);
+        }
+      }
+      //when last gallery was deleted
+      else if(Object.entries(data).length == 0){
+        this.configuration(undefined);
+      }
+      
     });
 }
   queryByPageSettingsIfChange() {
     this.getSetData.pageSettings.subscribe(pageSettings => {
       if (pageSettings.length > 0) {
-        let dataToDb = {
-          pageId: this.editingPageId,
-          pageSettings: pageSettings
-        }
-        this.getSetData.getDataByPage(dataToDb).subscribe(data => {
+        // let dataToDb = {
+        //   pageId: this.editingPageId,
+        //   pageSettings: pageSettings
+        // }
+        // this.getSetData.getDataByPage(dataToDb).subscribe(data => {
           this.configuration(this.pageData);
-        });
+        // });
       }
     });
   }
@@ -119,7 +159,9 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
     this.editImgTooltip = OtherTitles[this.settings['language']].editImg;
     this.deleteImgTooltip = OtherTitles[this.settings['language']].delete;
     this.independentFieldTitle = FormTitles[this.settings['language']].independentFieldTitle;
+    this.independentFieldTooltip = InfoTooltip[this.settings['language']].independedFieldInfo;
     this.infoImgSize = FormTitles[this.settings['language']].imgSizeInfoTitle;
+    this.deleteGalleryButton = ButtonsName[this.settings['language']].deleteGalleryButton;
     this.fillPageByData(data);
   }
   configurationIfLanguageChange(data?) {
@@ -130,7 +172,6 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   }
   
   imgsUpload(img, event) {
-    debugger
     let fileReader = new FileReader();
     if (event.target.files && event.target.files.length > 0) {
       this.sendFormDisabled = false;
@@ -148,7 +189,6 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
         */
         this.imgSpinner = true;
         let resolution = this.galleryForm.get('imgResolution').value.split(' x ');
-        debugger
         this.ng2Img.resizeImage(imgFile, resolution[0], resolution[1]).subscribe(resizedFile => {
           this.resizedFile = resizedFile;
           this.imgSpinner = false;
@@ -177,6 +217,13 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
     this.sendFormDisabled = true;
     const img: FormData = new FormData();
     img.append('pageId', this.editingPageId);
+    if(this.createdGallery){
+      img.append('ifAddedGallery','yes');//if gallery was created
+    }
+    else{
+      img.append('ifAddedGallery','no');
+    }
+    //if saving gallery have image
     if(this.resizedFile != undefined){
       let file;
       if(this.resizedFile == 'do not to be updated'){
@@ -197,9 +244,11 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
       }
       img.append('galleryName', this.galleryForm.get('galleryName').value);
       img.append('imgTitle', this.galleryForm.get('imageTitle').value);
+      img.append('galleryId',this.galleryForm.get('galleryId').value);
       this.galleryForm.get('imgUpload').setValue(img);
 
     }
+    //saving gallery have no image
     else{
       let galleryName = this.galleryForm.get('galleryName').value;
       //save only gallery name
@@ -214,7 +263,7 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
 
       }
     }
-    this.getSetData.saveImageToGallery(img).subscribe(result => {
+    this.getSetData.saveGallery(img).subscribe(result => {
       if (result.includes('SUCCESS') || result.includes('successfully')) {
         this.savedImageTitle = JSON.parse(result)[this.settings['language']];
         //reset form data
@@ -223,17 +272,15 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
         img.append('pageId', '');
         img.append('imgfile', '');
         img.append('changingImgPath', '');
-        this.imgSrcForView = '';
-        this.imgTypeForView = '';
-        this.selectedImgToEdit = '';
-        this.resizedFile = undefined;
-        this.editSrcPreview = '';
-        this.imgUploadFile.nativeElement.value = '';
-        this.galleryForm.get('imageTitle').setValue('');
-        this.queryByPageSettings();
-        setTimeout(() => {
-          this.savedImageTitle = '';
-        }, 3000);
+        this.resetForm();
+        // this.galleryForm.get('galleryId').setValue(+img.get('galleryId'));
+        //this.queryByPageSettings();
+        setTimeout(()=>{
+          this.dataFromParent.emit();
+        },1000);
+        // setTimeout(() => {
+        //   this.savedImageTitle = '';
+        // }, 3000);
       }
       else {
         this.errorSubmit = true;
@@ -244,6 +291,15 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
         }, 3000);
       }
     });
+  }
+  resetForm(){
+    this.imgSrcForView = '';
+    this.imgTypeForView = '';
+    this.selectedImgToEdit = '';
+    this.resizedFile = undefined;
+    this.editSrcPreview = '';
+    this.imgUploadFile.nativeElement.value = '';
+    this.galleryForm.get('imageTitle').setValue('');
   }
   //create img path depending on mode(development or not)
   modePath(path:string){
@@ -287,22 +343,23 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
         this.deleteData.deleteImageGallery(gallery).subscribe(result => {
           if(result.includes('SUCCESS')){
             this.queryByPageSettings();
-            this.dialog.open(Dialog,{
-              width: '350px',
-              data: {
-                text: Alert[this.settings['language']].alertDelete,
-                settings: this.settings
-              }
-            })
+            this.openDialog(Alert[this.settings['language']].alertDelete);
           }
-          else{
-            this.dialog.open(Dialog,{
-              width: '450px',
-              data: {
-                text: Alert[this.settings['language']].alertError,
+          else if(result.includes("ERROR")){
+            this.openDialog(Alert[this.settings['language']].alertError);
+          }
+          else if(result.includes('LAST IMAGE')){
+            this.dialog.open(DialogConfirm,{
+              width: '350px',
+              data:{
+                question: Alert[this.settings['language']].lastImage,
                 settings: this.settings
               }
-            })
+            }).afterClosed().subscribe(response => {
+              if(response['result'] == "yes"){
+                this.deleteCurrentGalleryWithNoConfirm();
+              }
+            });
           }
         });
       }
@@ -311,20 +368,90 @@ export class GalleryComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(){
     this.galleryForm.get('galleryName').valueChanges.pipe(pairwise()).subscribe(([prev, next]) => {
       //disable save gallery button if data of gallery name was not changed
-      if(prev != next){
+      if(prev != next && Object.keys(this.pageData).length > 0){
         this.sendFormDisabled = false;
       }
     });
   }
   fillPageByData(data){
-    for(let element of Object.entries(data)){
-      switch(element[0]){
-        case 'gallery': let galleryName = data['gallery'].find(el => el.galleryName)['galleryName'];
-                        this.galleryForm.get('galleryName').setValue(galleryName);
-        case 'editor' : ;
-      }
+    if(Object.keys(data).length > 0){
+      this.deleteButtonDisabled = false;
+      let galleryName = data[+Object.keys(data)[0]]['galleryName'];
+      let galleryId = data[+Object.keys(data)[0]]['galleryId'];
+      this.pageData = data;
+      this.galleryForm.get('galleryId').setValue(galleryId);
+      this.galleryForm.get('galleryName').setValue(galleryName);
+
     }
-    this.pageData = data;
+    //data is empty
+    else{
+      this.deleteButtonDisabled = true;
+      this.galleryForm.get('galleryId').setValue('');
+      this.pageData = [];
+    }
+  }
+  deleteCurrentGallery(){
+    this.dialog.open(DialogConfirm,{
+      width: '350px',
+      data:{
+        question: Alert[this.settings['language']].confirmDelete,
+        settings: this.settings
+      }
+    }).afterClosed().subscribe(response => {
+      if(response['result'] == 'yes'){
+        let currentGalleryId = this.galleryForm.get('galleryId').value;
+        this.getSetData.deleteGallery(currentGalleryId).subscribe(result => {
+          if(result.includes('SUCCES')){
+            this.openDialog(Alert[this.settings['language']].alertDelete);
+            this.galleryForm.get('galleryName').setValue('');
+            this.resetForm();
+            this.sendFormDisabled = true;
+           this.dataFromParent.emit();
+          //  this.queryByPageSettings();
+
+          }
+          else{
+            this.openDialog(Alert[this.settings['language']].alertError);
+          }
+        });
+    
+      }
+    })
+  }
+  deleteCurrentGalleryWithNoConfirm(){
+    let currentGalleryId = this.galleryForm.get('galleryId').value;
+    this.getSetData.deleteGallery(currentGalleryId).subscribe(result => {
+      if(result.includes('SUCCES')){
+    
+        this.openDialog(Alert[this.settings['language']].alertDelete);
+        this.galleryForm.get('galleryName').setValue('');
+        this.resetForm();
+        this.sendFormDisabled = true;
+        //this.queryByPageSettings();
+        this.dataFromParent.emit();
+      }
+      else{
+        this.openDialog(Alert[this.settings['language']].alertError);
+      }
+    });
+
+    }
+  
+  openDialog(message: string){
+    this.dialog.open(Dialog,{
+      width: '450px',
+      data: {
+        text: message,
+        settings: this.settings
+      }
+    })
+  }
+  ngAfterViewInit(){
+    //set equal height between image upload form to gallery block
+    let formHeight = this.galleryFormDomElement.nativeElement.offsetHeight + 'px';
+    document.querySelectorAll('.adminGallery').forEach(element => {
+      (element as HTMLBodyElement).style.height = formHeight;
+    })
   }
   ngOnDestroy() {
     

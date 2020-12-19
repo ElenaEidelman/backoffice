@@ -99,6 +99,7 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   saveNewMenu(menuName, parentData?) {
+    debugger
     let newMenu;
     if (parentData == undefined) {
       if (this.createMenuForm.valid) {
@@ -122,20 +123,20 @@ export class MenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getSetData.saveMenu(newMenu).subscribe(saved => {
       this.error = saved.includes('SUCCESS') ? false : true;
       if (saved.includes('SUCCESS')) {
-        this.getSetData.settings.subscribe(settings => {
+        // this.getSetData.settings.subscribe(settings => {
           if (parentData != undefined) {
             this.spinnerChild = false;
-            this.childrenFormAlert = saved.includes('SUCCESS') ? Alert[settings['language']].alertSaved : Alert[settings['language']].alertError;
+            this.childrenFormAlert = saved.includes('SUCCESS') ? Alert[this.settings['language']].alertSaved : Alert[this.settings['language']].alertError;
             // this.addMenuForm.get('title' + parentData.id).setValue('');
             // this.addMenuFormView = 'addMenuFormView';
           }
           else {
             this.spinner = false;
-            this.alert = saved.includes('SUCCESS') ? Alert[settings['language']].alertSaved : Alert[settings['language']].alertError;
+            this.alert = saved.includes('SUCCESS') ? Alert[this.settings['language']].alertSaved : Alert[this.settings['language']].alertError;
             this.createMenuForm.get('title').setValue('');
             this.formView = false;
           }
-        });
+        // });
         this.getMenu();
       }
 

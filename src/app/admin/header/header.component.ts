@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterContentInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterContentInit, AfterViewInit, HostListener } from '@angular/core';
 import { LanguageService } from '../../services/languages/languages.service';
 import { MatSidenav, MatDrawer } from '@angular/material/sidenav';
 import { GlobalFunctionsService } from 'src/app/services/globalFunctions/global-functions.service';
@@ -23,6 +23,15 @@ export class HeaderComponent implements OnInit, AfterContentInit, AfterViewInit 
     private globalFunc: GlobalFunctionsService,
     private fb: FormBuilder,
     private getSetData: GetSetDataService) { }
+
+
+    @HostListener('scroll', [])
+    onWindowScroll(event) {
+      var el = document.querySelector('.content');
+      var destinationFromTop = el.scrollTop;
+      alert();
+    }
+
 
 
 

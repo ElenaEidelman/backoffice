@@ -1,7 +1,4 @@
-.editor{
-    background: #fff;
-    color: #444444;
-}
+
 
 
 
@@ -37,6 +34,9 @@
        /*display:flex;*/
        flex-grow: 0;
        margin: 5px;
+       /* position: fixed;
+       display: block;
+       z-index: 9999999; */
   }
   button.pageViewSettingButton{
     box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
@@ -54,11 +54,17 @@
   /*drawer end*/
 
   .settingsElementWrap{
-    width: 100%;
+    margin: 0 10px;
   }
   .settingElement{
-    background: rgb(29, 38, 54);
     padding: 4px 0px;
     border-radius: 4px;
     margin: 8px 0px;
+  }
+  section.gallerySection{
+    /* background: rgb(29, 38, 54); */
+    margin: 2rem 0;
+  }
+  .formButton > button{
+    margin: 0 15px;
   }
